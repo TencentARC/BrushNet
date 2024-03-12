@@ -21,8 +21,7 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
 
 
 
-- [BrushNet](#brushnet)
-  - [TODO](#todo)
+
   - [🛠️ Method Overview](#️-method-overview)
   - [🚀 Getting Started](#-getting-started)
     - [Environment Requirement 🌍](#environment-requirement-)
