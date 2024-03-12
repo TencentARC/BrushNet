@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion">
+  <meta name="keywords" content="Image Inpainting, Diffusion Models, Image Generation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y5ZVQZ7NHC"></script> -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/favicon.svg"> -->
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js_slide/fontawesome.all.min.js"></script>
+  <script src="./static/js_slide/bulma-carousel.min.js"></script>
+  <script src="./static/js_slide/bulma-slider.min.js"></script>
+  <script src="./static/js_slide/index.js"></script>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <!-- Vendor Stylesheets -->
+  <!--=================js==========================-->
+  <link rel="stylesheet" href="./static/css/tab_gallery.css">
+  <link rel="stylesheet" href="./static/css/juxtapose.css">
+  <link rel="stylesheet" href="./static/css/image_card_fader.css">
+  <link rel="stylesheet" href="./static/css/image_card_slider.css">
+</head>
+<body>
+
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title"><span style="color:#e1570c; font-weight: bold; font-style: italic"><strong>BrushNet</strong></span> : A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://juxuan27.github.io/">Xuan Ju</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+              <a href="https://alvinliu0.github.io/">Xian Liu</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+              <a href="https://xinntao.github.io/">Xintao Wang</a><sup>1*</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com.hk/citations?user=HzemVzoAAAAJ&hl=zh-CN">Yuxuan Bian</a><sup>2</sup>,</span>
+            </span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/yingshanprofile">Ying Shan</a><sup>1</sup>,</span>
+            </span>
+            <span class="author-block">
+              <a href="https://cure-lab.github.io/">Qiang Xu</a><sup>2*</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>ARC Lab, Tencent PCG <br/> <sup>2</sup>The Chinese University of Hong Kong <br/> * Corresponding Author
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>ReadPaper</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2403.06976"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://drive.google.com/file/d/1IkEBWcd2Fui2WHcckap4QFPcCI0gkHBh/view?usp=sharing"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/TencentARC/BrushNet"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>  
+              <!-- huggingface Link. -->
+              <!-- <span class="link-block">
+                <a href="https://huggingface.co/spaces/ChenyangSi/FreeU"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-huggingface"></i>
+                  </span>
+                  <span>Huggingface Demo</span>
+                  </a>
+              </span> -->
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://forms.gle/9TgMZ8tm49UYsZ9s5"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--=================Teasers==========================-->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop has-text-centered">
+      <!-- The expanding image container -->
+      <!-- <h2 class="title is-3">Text to Image</h2> -->
+      <div class="tab_container">
+        <!-- Close the image -->
+        <!-- <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span> -->
+        <div id="juxtapose-embed-text" style="font-size: 1.3rem;font-family:'Lucida Calligraphy', Times, serif;text-align:center">
+          A young man with <strong style="color:#00aaff";>blue eyes</strong> and brown hair
+        </div>
+
+
+        <!-- Expanded image -->
+        <div id="juxtapose-embed" data-startingposition="30%" data-animate="true" class="juxtapose"
+          style="height: 512px; width: 512px;">
+          
+        </div>
+
+        <div>
+          <div id="juxtapose-hidden"></div>
+        </div>
+        
+        <!-- Image text -->
+        <div id="imgtext"></div>
+      </div>
+
+      <!-- The grid: four columns -->
+      <div class="tab_row">
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_1.jpg" onclick="tab_gallery_click('1');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_2.jpg" onclick="tab_gallery_click('2');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_3.jpg" onclick="tab_gallery_click('3');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_4.jpg" onclick="tab_gallery_click('4');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_5.jpg" onclick="tab_gallery_click('5');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_6.jpg" onclick="tab_gallery_click('6');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_7.jpg" onclick="tab_gallery_click('7');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_8.jpg" onclick="tab_gallery_click('8');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_9.jpg" onclick="tab_gallery_click('9');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_10.jpg" onclick="tab_gallery_click('10');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_11.jpg" onclick="tab_gallery_click('11');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_12.jpg" onclick="tab_gallery_click('12');">
+        </div>
+        <div class="tab_column">
+          <img src="BrushNet/teaser/gt_13.jpg" onclick="tab_gallery_click('13');">
+        </div>
+      </div>
+      <div class="content has-text-justified">
+        <p>
+          We propose <strong>BrushNet</strong>, a novel plug-and-play dual-branch model engineered to embed pixel-level mask image feature into any pre-trained diffusion model, guaranteeing coherent and enhanced image inpainting outcomes. <strong>You can drag the white line to see images before and after inpainting. Left: Masked Image. Right: Generated Image.</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--=================paper Video==========================-->
+<section class="hero is-light is-small">
+  <div class="columns is-centered has-text-centered"  style="margin-top: 10px; margin-bottom: 20px;">
+    <div class="column is-three-fifths">
+      <h2 class="title is-3">Video</h2>
+      
+      <div class="publication-video">
+        <iframe width="560" height="315" src="https://drive.google.com/file/d/1IkEBWcd2Fui2WHcckap4QFPcCI0gkHBh/preview" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+      
+
+    </div>
+  </div>
+</section>
+
+
+<!--=================Abstract==========================-->
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Image inpainting, the process of restoring corrupted images, has seen significant advancements with the advent of diffusion models (DMs). Despite these advancements, current DM adaptations for inpainting, which involve modifications to the sampling strategy or the development of inpainting-specific DMs, frequently suffer from semantic inconsistencies and reduced image quality. Addressing these challenges, our work introduces a novel paradigm: the division of masked image features and noisy latent into separate branches. This division dramatically diminishes the model's learning load, facilitating a nuanced incorporation of essential masked image information in a hierarchical fashion. Herein, we present <strong>BrushNet</strong>, a novel plug-and-play dual-branch model engineered to embed pixel-level masked image features into any pre-trained DM, guaranteeing coherent and enhanced image inpainting outcomes. Additionally, we introduce <strong>BrushData</strong> and <strong>BrushBench</strong> to facilitate segmentation-based inpainting training and performance assessment. Our extensive experimental analysis demonstrates BrushNet's superior performance over existing models across seven key metrics, including image quality, mask region preservation, and textual coherence.
+          </p>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- Model Overview -->
+<section class="section" style="background-color: #f1f1f1;">
+  <div class="container"  style="margin-top:30px;">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Model Overview</h2>
+        <p style="text-align: left;">Our model outputs an inpainted image given the mask and masked image input. Firstly, we downsample the mask to accommodate the size of the latent, and input the masked image to the VAE encoder to align the distribution of latent space. Then, noisy latent, masked image latent, and downsampled mask are concatenated as the input of BrushNet. The feature extracted from BrushNet is added to pretrained UNet layer by layer after a zero convolution block. After denoising, the generated image and masked image are blended with a blurred mask.</p>
+        <div class="content has-text-justified">
+          <div style="text-align: center; vertical-align:middle">
+            <img src="BrushNet/figures/model.png" width="900">
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+</section>
+
+
+<!-- Compare -->
+<section class="section">
+  <div class="container"  style="margin-top:30px;">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Compare BrushNet with Previous Works</h2>
+        <p style="text-align: left;">
+          <strong>Performance comparisons of BrushNet and previous image inpainting methods</strong> across various inpainting tasks: (I) Random Mask (< 50\% masked), (II) Random Mask (> 50\% masked), (III) Segmentation Mask Inside-Inpainting, (IV) Segmentation Mask Outside-Inpainting. Each group of results contains an artificial image (left) and a natural image (right) with $6$ inpainting methods: (b) Blended Latent Diffusion (BLD), (c) Stable Diffusion Inpainting (SDI), (d) HD-Painter (HDP), (e) PowerPaint (PP), (f) ControlNet-Inpainting (CNI), and (g) Ours, with (a) showing the given masked image. BrushNet shows its superior coherence in (1) style, (2) content, (3) color, and (4) prompt alignment.
+        </p>
+        <div class="content has-text-justified">
+          <div style="text-align: center; vertical-align:middle">
+            <img src="BrushNet/figures/teaser.png" width="900">
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+</section>
+
+
+
+<!-- Diverse Relations -->
+<section class="section"  style="background-color: #f1f1f1;">
+  <div class="container"  style="margin-top:30px;">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">BrushData & BrushBench</h2>
+        <p style="text-align: left;">To train and evaluate segmentation-based mask inpainting model, we propose BrushData and BrushBench. Specifically, BrushData add Laion-Aesthetic with additional segmentation mask annotation. BrushBench comprises a total of 600 images, with each image accompanied by the human-annotated mask and caption annotation. The images in BrushBench are evenly distributed between natural images and artificial images, such as paintings. Furthermore, the dataset ensures an equal distribution among different categories, including humans, animals, indoor scenarios, and outdoor scenarios. This balanced distribution enables a fair evaluation across various categories, promoting better evaluation equity.</p>
+        <div class="content has-text-justified">
+          <div style="text-align: center; vertical-align:middle">
+            <img src="BrushNet/figures/dataset.png" width="1000">
+          </div>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>  
+ 
+</section>
+
+
+
+
+<!--=================Quantitative Results==========================-->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Quantitative Comparisons</h2>
+        <!-- <h2 class="subtitle has-text-centered">We use eight metrics covering four aspects: structure distance, background preservation, edit prompt-image consistency, and inference time.</h2> -->
+        <p style="text-align: left;"><strong>Quantitative comparisons among BrushNet and other diffusion-based inpainting models in BrushBench</strong> Blended Latent Diffusion (BLD), Stable Diffusion Inpainting (SDI), HD-Painter (HDP), PowerPaint (PP), and ControlNet-Inpainting (CNI). Metrics encompassing image quality, masked region preservation, and text alignment (Text Align) for inside-inpainting and outside-inpainting are shown in the table. All models use Stable Diffusion V1.5 as base model. <strong style="color:#da0505">Red</strong> stands for the best result, <strong style="color:#0063a0">Blue</strong> stands for the second best result. </p>
+        <div class="content has-text-justified">
+          <div style="text-align: center; vertical-align:middle">
+            <img src="BrushNet/figures/brushbench.png" width="700">
+          </div>
+        </div>
+        <p><strong>Quantitative comparisons among BrushNet and other diffusion-based inpainting models in EditBench</strong> </p>
+        <div class="content has-text-justified">
+          <div style="text-align: center; vertical-align:middle">
+            <img src="BrushNet/figures/editbench.png" width="700">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--=================Qualitative Results==========================-->
+<section class="section" style="background-color: #f1f1f1;">
+  <div class="container">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">More Qualitative Results</h2>
+        <p> </p>
+        <h2 class="subtitle has-text-centered">Plug-and-Play</h2>
+        <p style="text-align: left;"><strong>Integrating BrushNet to community fine-tuned diffusion models.</strong> We use five popular community diffusion models fine-tuned from stable diffusion v1.5: DreamShaper (DS), epiCRealism (ER), Henmix_Real (HR), MeinaMix (MM), and Realistic Vision (RV). MM is specifically designed for anime images.</p>
+        <div class="content has-text-justified">
+          <div style="text-align: center; vertical-align:middle">
+            <img src="BrushNet/figures/base_model.png" width="1000">
+          </div>
+        </div>
+        <br/>
+        <h2 class="subtitle has-text-centered">Flexible Control Scale</h2>
+        <p style="text-align: left;"><strong>Flexible control scale of BrushNet.</strong> (a) shows the given masked image, (b)-(h) show adding BrushNet with control scale w from 1.0 to 0.2. Results show a gradually diminishing controllable ability from precise to rough control.</p>
+        <div class="content has-text-justified">
+          <div style="text-align: center; vertical-align:middle">
+            <img src="BrushNet/figures/scale.png" width="1000">
+          </div>
+        </div>
+        <br/>
+        <h2 class="subtitle has-text-centered">Compare with Different Inpaintingt Techniques</h2>
+        <p style="text-align: left;"><strong>Comparison of previous inpainting methods and BrushNet on various image domain</strong>: natural image (I, II), pencil painting (III), anime (IV), illustration (V), digital art (VI left), and watercolor (VI right). Each group of image contains with $6$ inpainting methods: (b) Blended Latent Diffusion (BLD), (c) Stable Diffusion Inpainting (SDI), (d) HD-Painter (HDP), (e) PowerPaint (PP), (f) ControlNet-Inpainting (CNI), and (g) Ours, with (a) showing the given masked image.</p>
+        <div class="content has-text-justified">
+          <div style="text-align: center; vertical-align:middle">
+            <img src="BrushNet/figures/experiment_compare.png" width="1000">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">Cite Us</h2>
+    <pre><code>@misc{ju2024brushnet,
+  title={BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion}, 
+  author={Xuan Ju and Xian Liu and Xintao Wang and Yuxuan Bian and Ying Shan and Qiang Xu},
+  year={2024},
+  eprint={2403.06976},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV}
+}</code></pre>
+  </div>
+</section>
+
+  
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Image Slider Javascripts -->
+<!--=================Functions==========================-->
+<script src="static/js/juxtapose.js"></script>
+
+<script>
+  var slider;
+  let origImages = [
+    { "src": "BrushNet/teaser/edit_1.jpg", "label": "Masked Image", },
+    { "src": "BrushNet/teaser/gt_1.jpg", "label": "Generated Image", }
+  ];
+  let origOptions = {
+    "makeResponsive": true,
+    "showLabels": true,
+    "mode": "horizontal",
+    "showCredits": true,
+    "animate": true,
+    "startingPosition": "50"
+  };
+
+  const juxtaposeSelector = "#juxtapose-embed";
+  const transientSelector = "#juxtapose-hidden";
+
+  
+  function tab_gallery_click(name) {
+    // Get the expanded image
+    let inputImage = {
+      label: "Masked Image",
+    };
+    let outputImage = {
+      label: "Generated Image",
+    };
+
+    inputImage.src = "BrushNet/teaser/".concat("edit_",name, ".jpg")
+    outputImage.src = "BrushNet/teaser/".concat("gt_",name, ".jpg")
+
+
+    if(name=="1"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A young man with <strong style='color:#00aaff';>blue eyes</strong> and brown hair"
+    }
+    if(name=="2"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A beautiful woman with <strong style='color:#00aaff';>long blonde hair</strong> and <strong style='color:#00aaff';>stars</strong> in her hair"
+    }
+    if(name=="3"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "The cover of a <strong style='color:#00aaff';>book</strong>, the <strong style='color:#00aaff';>girl</strong> and the dog"
+    }
+    if(name=="4"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A <strong style='color:#00aaff';>woman</strong> holding a rainbow flag in the air"
+    }
+    if(name=="5"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A <strong style='color:#00aaff';>woman in futuristic armor</strong> and glasses standing in front of a <strong style='color:#00aaff';>city</strong>"
+    }
+    if(name=="6"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A <strong style='color:#00aaff';>woman</strong> with her hands on her face"
+    }
+    if(name=="7"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A <strong style='color:#00aaff';>woman</strong> in a witch hat and <strong style='color:#00aaff';>black dress</strong>"
+    }
+    if(name=="8"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A blue <strong style='color:#00aaff';>butterfly</strong> with <strong style='color:#00aaff';>stars</strong> on it"
+    }
+    if(name=="9"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A lipstick with <strong style='color:#00aaff';>red powder</strong> around it"
+    }
+    if(name=="10"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "Cartoon girl sitting at a table with <strong style='color:#00aaff';>pizza and drink</strong>"
+    }
+    if(name=="11"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A <strong style='color:#00aaff';>woman</strong> in traditional chinese dress holding a <strong style='color:#00aaff';>flower</strong>"
+    }
+    if(name=="12"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A <strong style='color:#00aaff';>painting</strong> of a <strong style='color:#00aaff';>house</strong> on a hill with a path leading to it"
+    }
+    if(name=="13"){
+      document.getElementById("juxtapose-embed-text").innerHTML = "A <strong style='color:#00aaff';>woman</strong> in a gold dress holding an <strong style='color:#00aaff';>apple</strong>"
+    }
+
+    let images = [inputImage, outputImage];
+    let options = slider.options;
+    options.callback = function (obj) {
+      var newNode = document.getElementById(obj.selector.substring(1));
+      var oldNode = document.getElementById(juxtaposeSelector.substring(1));
+      
+      console.log(obj.selector.substring(1));
+      console.log(newNode.children[0]);
+      oldNode.replaceChild(newNode.children[0], oldNode.children[0]);
+      //newNode.removeChild(newNode.children[0]);
+
+    };
+
+    slider = new juxtapose.JXSlider(transientSelector, images, options);
+  };
+
+  (function () {
+    slider = new juxtapose.JXSlider(
+      juxtaposeSelector, origImages, origOptions);
+    //document.getElementById("left-button").onclick = replaceLeft;
+    //document.getElementById("right-button").onclick = replaceRight;
+  })();
+  // Get the image text
+  var imgText = document.getElementById("imgtext");
+  // Use the same src in the expanded image as the image being clicked on from the grid
+  // expandImg.src = imgs.src;
+  // Use the value of the alt attribute of the clickable image as text inside the expanded image
+  imgText.innerHTML = name;
+  // Show the container element (hidden with CSS)
+  // expandImg.parentElement.style.display = "block";
+
+  $(".flip-card").click(function () {
+    console.log("fading in")
+    div_back = $(this).children().children()[1]
+    div_front = $(this).children().children()[0]
+    // console.log($(this).children("div.flip-card-back"))
+    console.log(div_back)
+    $(div_front).addClass("out");
+    $(div_front).removeClass("in");
+
+    $(div_back).addClass("in");
+    $(div_back).removeClass("out");
+
+  });
+
+  $(".flip-card").mouseleave(function () {
+    console.log("fading in")
+    div_back = $(this).children().children()[1]
+    div_front = $(this).children().children()[0]
+    // console.log($(this).children("div.flip-card-back"))
+    console.log(div_back)
+    $(div_front).addClass("in");
+    $(div_front).removeClass("out");
+
+    $(div_back).addClass("out");
+    $(div_back).removeClass("in");
+
+  });
+</script>
+
+
+</body>
+</html>
+
+
