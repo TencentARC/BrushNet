@@ -1,0 +1,77 @@
+name: Build Docker images (nightly)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *" # every day at midnight
+
+concurrency:
+  group: docker-image-builds
+  cancel-in-progress: false
+
+env:
+  REGISTRY: diffusers
+  CI_SLACK_CHANNEL: ${{ secrets.CI_DOCKER_CHANNEL }}
+
+jobs:
+  build-docker-images:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        image-name:
+          - diffusers-pytorch-cpu
+          - diffusers-pytorch-cuda
+          - diffusers-pytorch-compile-cuda
+          - diffusers-pytorch-xformers-cuda
+          - diffusers-flax-cpu
+          - diffusers-flax-tpu
+          - diffusers-onnxruntime-cpu
+          - diffusers-onnxruntime-cuda
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.REGISTRY }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          no-cache: true
+          context: ./docker/${{ matrix.image-name }}
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ matrix.image-name }}:latest
+
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@6c661ce58804a1a20f6dc5fbee7f0381b469e001
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: ${{ env.CI_SLACK_CHANNEL }}
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "text": "${{ matrix.image-name }} Docker Image build result: ${{ job.status }}\n${{ github.event.head_commit.url }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ matrix.image-name }} Docker Image build result: ${{ job.status }}\n${{ github.event.head_commit.url }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_CIFEEDBACK_BOT_TOKEN }}
