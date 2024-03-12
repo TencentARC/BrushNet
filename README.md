@@ -176,10 +176,13 @@ Remember to replace the `brushnet_path` with your local checkpoint path.
 ## 🤝🏼 Cite Us
 
 ```
-@article{ju2024brushnet,
-  title={BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion},
-  author={Ju, Xuan and Liu, Xian and Wang, Xintao and Bian, Yuxuan and Shan, Ying and Xu, Qiang},
-  year={2024}
+@misc{ju2024brushnet,
+  title={BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion}, 
+  author={Xuan Ju and Xian Liu and Xintao Wang and Yuxuan Bian and Ying Shan and Qiang Xu},
+  year={2024},
+  eprint={2403.06976},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV}
 }
 ```
 
@@ -187,5 +190,5 @@ Remember to replace the `brushnet_path` with your local checkpoint path.
 ## 💖 Acknowledgement
 <span id="acknowledgement"></span>
 
-Our code is modified on the basis of [diffusers](https://github.com/huggingface/diffusers), thanks to all the contributors!
+Our code is modified based on [diffusers](https://github.com/huggingface/diffusers), thanks to all the contributors!
 
