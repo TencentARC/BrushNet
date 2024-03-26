@@ -207,7 +207,7 @@ with block:
                             minimum=1,
                             maximum=12,
                             step=0.1,
-                            value=7.5,
+                            value=12,
                         )
                         num_inference_steps = gr.Slider(
                             label="Number of inference steps",
