@@ -11,3 +11,6 @@ image-reward
 hpsv2
 torchmetrics
 open-clip-torch
+clip
+gradio==3.50.0
+segment_anything

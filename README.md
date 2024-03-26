@@ -20,8 +20,6 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
 **📖 Table of Contents**
 
 
-
-
   - [🛠️ Method Overview](#️-method-overview)
   - [🚀 Getting Started](#-getting-started)
     - [Environment Requirement 🌍](#environment-requirement-)
@@ -29,25 +27,25 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
   - [🏃🏼 Running Scripts](#-running-scripts)
     - [Training 🤯](#training-)
     - [Inference 📜](#inference-)
+    - [Evaluation 📏](#evaluation-)
   - [🤝🏼 Cite Us](#-cite-us)
   - [💖 Acknowledgement](#-acknowledgement)
 
 
 ## TODO
 
+
 - [x] Release trainig and inference code
-- [ ] Release checkpoint (sdv1.5)
+- [x] Release checkpoint (sdv1.5)
 - [ ] Release checkpoint (sdxl)
-- [ ] Release evluation code
-- [ ] Release gradio demo
+- [x] Release evluation code
+- [x] Release gradio demo
 
 ## 🛠️ Method Overview
 
 BrushNet is a diffusion-based text-guided image inpainting model that can be plug-and-play into any pre-trained diffusion model. Our architectural design incorporates two key insights: (1) dividing the masked image features and noisy latent reduces the model's learning load, and (2) leveraging dense per-pixel control over the entire pre-trained model enhances its suitability for image inpainting tasks. More analysis can be found in the main paper.
 
 ![](examples/brushnet/src/model.png)
-
-
 
 
 
@@ -105,20 +103,34 @@ You can download the BrushData and BrushBench [here](https://forms.gle/9TgMZ8tm4
     |-- EditBench
         |-- images
         |-- mapping_file.json
-    |-- ckpt
-        |-- realisticVisionV60B1_v51VAE
-            |-- model_index.json
-            |-- vae
-            |-- ...
-        |-- ...
 ```
-
-The ckpt folder contains pretrinaed Stable Diffusion checkpoint (e.g., from [Civitai](https://civitai.com/)). We provide the processed realisticVisionV60B1_v51VAE ckpt [here](https://drive.google.com/drive/folders/1fqmS1CEOvXCxNWFrsSYd_jHYXxrydh1n?usp=sharing). You can use `scripts/convert_original_stable_diffusion_to_diffusers.py` to process the checkpoint downloaded from Civitai.
 
 
 Noted: *We only provide a part of the BrushData due to the space limit. Please write an email to juxuan.27@gmail.com if you need the full dataset.*
 
 
+**Checkpoints**
+
+Checkpoints of BrushNet can be downloaded from [here](https://drive.google.com/drive/folders/1fqmS1CEOvXCxNWFrsSYd_jHYXxrydh1n?usp=drive_link). The ckpt folder contains our pretrained checkpoints and pretrinaed Stable Diffusion checkpoint (e.g., realisticVisionV60B1_v51VAE from [Civitai](https://civitai.com/)). You can use `scripts/convert_original_stable_diffusion_to_diffusers.py` to process other models downloaded from Civitai. The data structure should be like:
+
+
+
+```
+|-- data
+    |-- BrushData
+    |-- BrushDench
+    |-- EditBench
+    |-- ckpt
+        |-- realisticVisionV60B1_v51VAE
+            |-- model_index.json
+            |-- vae
+            |-- ...
+        |-- segmentation_mask_brushnet_ckpt
+        |-- random_mask_brushnet_ckpt
+        |-- ...
+```
+
+The checkpoint in `segmentation_mask_brushnet_ckpt` provides checkpoints trained on BrushData, which has segmentation prior (mask are with the same shape of objects). The `random_mask_brushnet_ckpt` provides a more general ckpt for random mask shape.
 
 ## 🏃🏼 Running Scripts
 
@@ -170,7 +182,33 @@ You can inference with the script:
 python examples/brushnet/test_brushnet.py
 ```
 
-Remember to replace the `brushnet_path` with your local checkpoint path.
+Since BrushNet is trained on Laion, it can only guarantee the performance on general scenarios. We recommend you train on your own data (e.g., product exhibition, virtual try-on) if you have high-quality industrial application requirements. We would also be appreciate if you would like to contribute your trained model!
+
+You can also inference through gradio demo:
+
+```
+python examples/brushnet/app_brushnet.py
+```
+
+
+### Evaluation 📏
+
+You can evaluate using the script:
+
+```
+python examples/brushnet/evaluate_brushnet.py \
+--brushnet_ckpt_path data/ckpt/segmentation_mask_brushnet_ckpt \
+--image_save_path runs/evaluation_result/BrushBench/brushnet_segmask/inside \
+--mapping_file data/BrushBench/mapping_file.json \
+--base_dir data/BrushBench \
+--mask_key inpainting_mask
+```
+
+The `--mask_key` indicates which kind of mask to use, `inpainting_mask` for inside inpainting and `outpainting_mask` for outside inpainting. The evaluation results (images and metrics) will be saved in `--image_save_path`. 
+
+
+
+*Noted that you need to ignore the nsfw detector in `src/diffusers/pipelines/brushnet/pipeline_brushnet.py#1261` to get the correct evaluation results. Moreover, we find different machine may generate different images, thus providing the results on our machine [here](https://drive.google.com/drive/folders/1dK3oIB2UvswlTtnIS1iHfx4s57MevWdZ?usp=sharing).*
 
 
 ## 🤝🏼 Cite Us
