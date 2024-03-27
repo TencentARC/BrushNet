@@ -18,7 +18,12 @@ markers = [1, 5]
 
 # - - - - - examples  - - - - -  #
 image_examples = [
-    ["examples/brushnet/src/test_image.jpg", "A beautiful cake on the table", "examples/brushnet/src/test_mask.jpg", 0, []],
+    ["examples/brushnet/src/test_image.jpg", "A beautiful cake on the table", "examples/brushnet/src/test_mask.jpg", 0, [], [Image.open("examples/brushnet/src/test_result.png")]],
+    ["examples/brushnet/src/example_1.jpg", "A man in Chinese traditional clothes", "examples/brushnet/src/example_1_mask.jpg", 1, [], [Image.open("examples/brushnet/src/example_1_result.png")]],
+    ["examples/brushnet/src/example_2.jpg", "a charming woman with dress standing by the sea", "examples/brushnet/src/example_2_mask.jpg", 2, [], [Image.open("examples/brushnet/src/example_2_result.png")]],
+    ["examples/brushnet/src/example_3.jpg", "a cut toy on the table", "examples/brushnet/src/example_3_mask.jpg", 3, [], [Image.open("examples/brushnet/src/example_3_result.png")]],
+    ["examples/brushnet/src/example_4.jpeg", "a car driving in the wild", "examples/brushnet/src/example_4_mask.jpg", 4, [], [Image.open("examples/brushnet/src/example_4_result.png")]],
+    ["examples/brushnet/src/example_5.jpg", "a charming woman wearing dress standing in the dark forest", "examples/brushnet/src/example_5_mask.jpg", 5, [], [Image.open("examples/brushnet/src/example_5_result.png")]],
 ]
 
 
@@ -28,14 +33,6 @@ base_model_path = "data/ckpt/realisticVisionV60B1_v51VAE"
 
 # input brushnet ckpt path
 brushnet_path = "data/ckpt/segmentation_mask_brushnet_ckpt"
-
-# input source image / mask image path and the text prompt
-image_path="examples/brushnet/src/test_image.jpg"
-mask_path="examples/brushnet/src/test_mask.jpg"
-caption="A cake on the table."
-
-# conditioning scale
-paintingnet_conditioning_scale=1.0
 
 brushnet = BrushNetModel.from_pretrained(brushnet_path, torch_dtype=torch.float16)
 pipe = StableDiffusionBrushNetPipeline.from_pretrained(
@@ -120,8 +117,9 @@ def process(input_image,
             raise gr.Error('Using blurred blending with control strength less than 1.0 is not allowed')
         blended_image=[]
         # blur, you can adjust the parameters for better performance
-        mask = cv2.GaussianBlur(mask*255, (21, 21), 0)/255
-        mask = mask[:,:,np.newaxis]
+        mask_blurred = cv2.GaussianBlur(mask*255, (21, 21), 0)/255
+        mask_blurred = mask_blurred[:,:,np.newaxis]
+        mask = 1-(1-mask) * (1-mask_blurred)
         for image_i in image:
             image_np=np.array(image_i)
             image_pasted=original_image * (1-mask) + image_np*mask
@@ -207,7 +205,7 @@ with block:
                             minimum=1,
                             maximum=12,
                             step=0.1,
-                            value=7.5,
+                            value=12,
                         )
                         num_inference_steps = gr.Slider(
                             label="Number of inference steps",
@@ -226,12 +224,12 @@ with block:
                 with gr.TabItem("Outputs"):
                     result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery", preview=True)
     with gr.Row():
-        def process_example(input_image, prompt, input_mask, original_image, selected_points): # 
-            return input_image, prompt, input_mask, original_image, []
+        def process_example(input_image, prompt, input_mask, original_image, selected_points,result_gallery): #
+            return input_image, prompt, input_mask, original_image, [], result_gallery
         example = gr.Examples(
             label="Input Example",
             examples=image_examples,
-            inputs=[input_image, prompt, input_mask, original_image, selected_points],
+            inputs=[input_image, prompt, input_mask, original_image, selected_points,result_gallery],
             outputs=[input_image, prompt, input_mask, original_image, selected_points],
             fn=process_example,
             run_on_click=True,
@@ -331,4 +329,4 @@ with block:
     run_button.click(fn=process, inputs=ips, outputs=[result_gallery])
 
 
-block.launch(share=False,server_port=12345)
+block.launch(server_name="0.0.0.0",share=False,server_port=12345)

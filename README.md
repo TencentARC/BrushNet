@@ -9,10 +9,11 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
 
 
 <p align="center">
-  <a href="https://tencentarc.github.io/BrushNet/">Project Page</a> |
-  <a href="https://arxiv.org/abs/2403.06976">Arxiv</a> |
-  <a href="https://forms.gle/9TgMZ8tm49UYsZ9s5">Data</a> |
-  <a href="https://drive.google.com/file/d/1IkEBWcd2Fui2WHcckap4QFPcCI0gkHBh/view">Video</a> |
+  <a href="https://tencentarc.github.io/BrushNet/">🌐Project Page</a> |
+  <a href="https://arxiv.org/abs/2403.06976">📜Arxiv</a> |
+  <a href="https://forms.gle/9TgMZ8tm49UYsZ9s5">🗄️Data</a> |
+  <a href="https://drive.google.com/file/d/1IkEBWcd2Fui2WHcckap4QFPcCI0gkHBh/view">📹Video</a> |
+  <a href="https://huggingface.co/spaces/TencentARC/BrushNet">🤗Hugging Face Demo</a> |
 </p>
 
 

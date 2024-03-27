@@ -228,8 +228,9 @@ for key, item in mapping_file.items():
         init_image_np=cv2.imread(os.path.join(args.base_dir,image_path))[:,:,::-1]
 
         # blur
-        mask_np = cv2.GaussianBlur(mask_np*255, (21, 21), 0)/255
-        mask_np = mask_np[:,:,np.newaxis]
+        mask_blurred = cv2.GaussianBlur(mask_np*255, (21, 21), 0)/255
+        mask_blurred = mask_blurred[:,:,np.newaxis]
+        mask_np = 1-(1-mask_np) * (1-mask_blurred)
 
         image_pasted=init_image_np * (1-mask_np) + image_np*mask_np
         image_pasted=image_pasted.astype(image_np.dtype)
