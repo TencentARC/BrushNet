@@ -39,7 +39,7 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
 - [x] Release trainig and inference code
 - [x] Release checkpoint (sdv1.5)
 - [ ] Release checkpoint (sdxl)
-- [x] Release evluation code
+- [x] Release evaluation code
 - [x] Release gradio demo
 
 ## 🛠️ Method Overview
