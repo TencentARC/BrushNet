@@ -38,9 +38,11 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
 
 - [x] Release trainig and inference code
 - [x] Release checkpoint (sdv1.5)
-- [ ] Release checkpoint (sdxl)
+- [x] Release checkpoint (sdxl). Sadly, I only have V100 for training this checkpoint, which can only train with a batch size of 1 with a slow speed. The current ckpt is only trained for a small step number thus perform not well. But fortunately, [yuanhang](https://github.com/yuanhangio) volunteer to help training a better version. Please stay tuned! Thank [yuanhang](https://github.com/yuanhangio) for his effort!
 - [x] Release evluation code
 - [x] Release gradio demo
+- [x] Release comfyui demo. Thank [nullquant](https://github.com/nullquant) ([ConfyUI-BrushNet](https://github.com/nullquant/ComfyUI-BrushNet)) and [kijai](https://github.com/kijai) ([ComfyUI-BrushNet-Wrapper](https://github.com/kijai/ComfyUI-BrushNet-Wrapper)) for helping!
+- [x] Release [trainig data](https://huggingface.co/datasets/random123123/BrushData). Thank [random123123](https://huggingface.co/random123123) for helping!
 
 ## 🛠️ Method Overview
 
@@ -107,13 +109,21 @@ You can download the BrushData and BrushBench [here](https://forms.gle/9TgMZ8tm4
 ```
 
 
-Noted: *We only provide a part of the BrushData due to the space limit. Please write an email to juxuan.27@gmail.com if you need the full dataset.*
+Noted: *We only provide a part of the BrushData in google drive due to the space limit. [random123123](https://huggingface.co/random123123) has helped upload a full dataset on hugging face [here](https://huggingface.co/datasets/random123123/BrushData). Thank for his help!*
 
 
 **Checkpoints**
 
-Checkpoints of BrushNet can be downloaded from [here](https://drive.google.com/drive/folders/1fqmS1CEOvXCxNWFrsSYd_jHYXxrydh1n?usp=drive_link). The ckpt folder contains our pretrained checkpoints and pretrinaed Stable Diffusion checkpoint (e.g., realisticVisionV60B1_v51VAE from [Civitai](https://civitai.com/)). You can use `scripts/convert_original_stable_diffusion_to_diffusers.py` to process other models downloaded from Civitai. The data structure should be like:
+Checkpoints of BrushNet can be downloaded from [here](https://drive.google.com/drive/folders/1fqmS1CEOvXCxNWFrsSYd_jHYXxrydh1n?usp=drive_link). The ckpt folder contains 
 
+- BrushNet pretrained checkpoints for Stable Diffusion v1.5 (`segmentation_mask_brushnet_ckpt` and `random_mask_brushnet_ckpt`)
+- pretrinaed Stable Diffusion v1.5 checkpoint (e.g., realisticVisionV60B1_v51VAE from [Civitai](https://civitai.com/)). You can use `scripts/convert_original_stable_diffusion_to_diffusers.py` to process other models downloaded from Civitai. 
+- BrushNet pretrained checkpoints for Stable Diffusion XL (`segmentation_mask_brushnet_ckpt_sdxl_v0` and `random_mask_brushnet_ckpt_sdxl_v0`).  A better version will be shortly released by [yuanhang](https://github.com/yuanhangio). Please stay tuned!
+- pretrinaed Stable Diffusion XL checkpoint (e.g., juggernautXL_juggernautX from [Civitai](https://civitai.com/)). You can use `StableDiffusionXLPipeline.from_single_file("path of safetensors").save_pretrained("path to save",safe_serialization=False)` to process other models downloaded from Civitai. 
+
+
+
+The data structure should be like:
 
 
 ```
@@ -127,11 +137,13 @@ Checkpoints of BrushNet can be downloaded from [here](https://drive.google.com/d
             |-- vae
             |-- ...
         |-- segmentation_mask_brushnet_ckpt
+        |-- segmentation_mask_brushnet_ckpt_sdxl_v0
         |-- random_mask_brushnet_ckpt
+        |-- random_mask_brushnet_ckpt_sdxl_v0
         |-- ...
 ```
 
-The checkpoint in `segmentation_mask_brushnet_ckpt` provides checkpoints trained on BrushData, which has segmentation prior (mask are with the same shape of objects). The `random_mask_brushnet_ckpt` provides a more general ckpt for random mask shape.
+The checkpoint in `segmentation_mask_brushnet_ckpt` and `segmentation_mask_brushnet_ckpt_sdxl_v0` provide checkpoints trained on BrushData, which has segmentation prior (mask are with the same shape of objects). The `random_mask_brushnet_ckpt` and `random_mask_brushnet_ckpt_sdxl` provide a more general ckpt for random mask shape.
 
 ## 🏃🏼 Running Scripts
 
@@ -141,6 +153,7 @@ The checkpoint in `segmentation_mask_brushnet_ckpt` provides checkpoints trained
 You can train with segmentation mask using the script:
 
 ```
+# sd v1.5
 accelerate launch examples/brushnet/train_brushnet.py \
 --pretrained_model_name_or_path runwayml/stable-diffusion-v1-5 \
 --output_dir runs/logs/brushnet_segmentationmask \
@@ -152,6 +165,22 @@ accelerate launch examples/brushnet/train_brushnet.py \
 --report_to tensorboard \
 --resume_from_checkpoint latest \
 --validation_steps 300
+--checkpointing_steps 10000 
+
+# sdxl
+accelerate launch examples/brushnet/train_brushnet_sdxl.py \
+--pretrained_model_name_or_path stabilityai/stable-diffusion-xl-base-1.0 \
+--output_dir runs/logs/brushnetsdxl_segmentationmask \
+--train_data_dir data/BrushData \
+--resolution 1024 \
+--learning_rate 1e-5 \
+--train_batch_size 1 \
+--gradient_accumulation_steps 4 \
+--tracker_project_name brushnet \
+--report_to tensorboard \
+--resume_from_checkpoint latest \
+--validation_steps 300 \
+--checkpointing_steps 10000 
 ```
 
 To use custom dataset, you can process your own data to the format of BrushData and revise `--train_data_dir`.
@@ -159,6 +188,7 @@ To use custom dataset, you can process your own data to the format of BrushData 
 You can train with random mask using the script (by adding `--random_mask`):
 
 ```
+# sd v1.5
 accelerate launch examples/brushnet/train_brushnet.py \
 --pretrained_model_name_or_path runwayml/stable-diffusion-v1-5 \
 --output_dir runs/logs/brushnet_randommask \
@@ -171,6 +201,22 @@ accelerate launch examples/brushnet/train_brushnet.py \
 --resume_from_checkpoint latest \
 --validation_steps 300 \
 --random_mask
+
+# sdxl
+accelerate launch examples/brushnet/train_brushnet_sdxl.py \
+--pretrained_model_name_or_path stabilityai/stable-diffusion-xl-base-1.0 \
+--output_dir runs/logs/brushnetsdxl_randommask \
+--train_data_dir data/BrushData \
+--resolution 1024 \
+--learning_rate 1e-5 \
+--train_batch_size 1 \
+--gradient_accumulation_steps 4 \
+--tracker_project_name brushnet \
+--report_to tensorboard \
+--resume_from_checkpoint latest \
+--validation_steps 300 \
+--checkpointing_steps 10000 \
+--random_mask
 ```
 
 
@@ -180,7 +226,10 @@ accelerate launch examples/brushnet/train_brushnet.py \
 You can inference with the script:
 
 ```
+# sd v1.5
 python examples/brushnet/test_brushnet.py
+# sdxl
+python examples/brushnet/test_brushnet_sdxl.py
 ```
 
 Since BrushNet is trained on Laion, it can only guarantee the performance on general scenarios. We recommend you train on your own data (e.g., product exhibition, virtual try-on) if you have high-quality industrial application requirements. We would also be appreciate if you would like to contribute your trained model!
@@ -188,6 +237,7 @@ Since BrushNet is trained on Laion, it can only guarantee the performance on gen
 You can also inference through gradio demo:
 
 ```
+# sd v1.5
 python examples/brushnet/app_brushnet.py
 ```
 
