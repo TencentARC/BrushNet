@@ -1,4 +1,4 @@
-from diffusers import StableDiffusionXLBrushNetPipeline, BrushNetModel, UniPCMultistepScheduler, AutoencoderKL
+from diffusers import StableDiffusionXLBrushNetPipeline, BrushNetModel, DPMSolverMultistepScheduler, UniPCMultistepScheduler, AutoencoderKL
 import torch
 import cv2
 import numpy as np
@@ -30,7 +30,8 @@ pipe = StableDiffusionXLBrushNetPipeline.from_pretrained(
 pipe.vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16)
  
 # speed up diffusion process with faster scheduler and memory optimization
-pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
+# pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 # remove following line if xformers is not installed or when using Torch 2.0.
 # pipe.enable_xformers_memory_efficient_attention()
 # memory optimization.
