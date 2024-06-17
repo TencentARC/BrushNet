@@ -45,6 +45,7 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
 - [x] Release gradio demo
 - [x] Release comfyui demo. Thank [nullquant](https://github.com/nullquant) ([ConfyUI-BrushNet](https://github.com/nullquant/ComfyUI-BrushNet)) and [kijai](https://github.com/kijai) ([ComfyUI-BrushNet-Wrapper](https://github.com/kijai/ComfyUI-BrushNet-Wrapper)) for helping!
 - [x] Release [trainig data](https://huggingface.co/datasets/random123123/BrushData). Thank [random123123](https://huggingface.co/random123123) for helping!
+- [x] We use BrushNet to participate in CVPR2024 GenAI Media Generation Challenge Workshop and get top prize! The solution is provided in [InstructionGuidedEditing](InstructionGuidedEditing)
 
 ## 🛠️ Method Overview
 
