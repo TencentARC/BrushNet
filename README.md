@@ -46,6 +46,7 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
 - [x] Release comfyui demo. Thank [nullquant](https://github.com/nullquant) ([ConfyUI-BrushNet](https://github.com/nullquant/ComfyUI-BrushNet)) and [kijai](https://github.com/kijai) ([ComfyUI-BrushNet-Wrapper](https://github.com/kijai/ComfyUI-BrushNet-Wrapper)) for helping!
 - [x] Release [trainig data](https://huggingface.co/datasets/random123123/BrushData). Thank [random123123](https://huggingface.co/random123123) for helping!
 - [x] We use BrushNet to participate in CVPR2024 GenAI Media Generation Challenge Workshop and get top prize! The solution is provided in [InstructionGuidedEditing](InstructionGuidedEditing)
+- [x] Release a new version of checkpoint (sdxl).
 
 ## 🛠️ Method Overview
 
@@ -121,7 +122,7 @@ Checkpoints of BrushNet can be downloaded from [here](https://drive.google.com/d
 
 - BrushNet pretrained checkpoints for Stable Diffusion v1.5 (`segmentation_mask_brushnet_ckpt` and `random_mask_brushnet_ckpt`)
 - pretrinaed Stable Diffusion v1.5 checkpoint (e.g., realisticVisionV60B1_v51VAE from [Civitai](https://civitai.com/)). You can use `scripts/convert_original_stable_diffusion_to_diffusers.py` to process other models downloaded from Civitai. 
-- BrushNet pretrained checkpoints for Stable Diffusion XL (`segmentation_mask_brushnet_ckpt_sdxl_v0` and `random_mask_brushnet_ckpt_sdxl_v0`).  A better version will be shortly released by [yuanhang](https://github.com/yuanhangio). Please stay tuned!
+- BrushNet pretrained checkpoints for Stable Diffusion XL (`segmentation_mask_brushnet_ckpt_sdxl_v1` and `random_mask_brushnet_ckpt_sdxl_v0`).  A better version will be shortly released by [yuanhang](https://github.com/yuanhangio). Please stay tuned!
 - pretrinaed Stable Diffusion XL checkpoint (e.g., juggernautXL_juggernautX from [Civitai](https://civitai.com/)). You can use `StableDiffusionXLPipeline.from_single_file("path of safetensors").save_pretrained("path to save",safe_serialization=False)` to process other models downloaded from Civitai. 
 
 
