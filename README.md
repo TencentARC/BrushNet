@@ -1,6 +1,6 @@
 # BrushNet
 
-This repository contains the implementation of the paper "BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion"
+This repository contains the implementation of the ECCV2024 paper "BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion"
 
 Keywords: Image Inpainting, Diffusion Models, Image Generation
 
