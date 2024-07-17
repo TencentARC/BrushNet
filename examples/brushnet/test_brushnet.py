@@ -36,6 +36,7 @@ pipe.enable_model_cpu_offload()
 
 init_image = cv2.imread(image_path)[:,:,::-1]
 mask_image = 1.*(cv2.imread(mask_path).sum(-1)>255)[:,:,np.newaxis]
+mask_image = 1 - mask_image
 init_image = init_image * (1-mask_image)
 
 init_image = Image.fromarray(init_image.astype(np.uint8)).convert("RGB")
