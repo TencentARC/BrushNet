@@ -22,6 +22,7 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
 
 
 - [BrushNet](#brushnet)
+  - [🔥 Update Log](#-update-log)
   - [TODO](#todo)
   - [🛠️ Method Overview](#️-method-overview)
   - [🚀 Getting Started](#-getting-started)
@@ -35,8 +36,12 @@ Keywords: Image Inpainting, Diffusion Models, Image Generation
   - [💖 Acknowledgement](#-acknowledgement)
 
 
-## TODO
 
+## 🔥 Update Log
+- [2024/12/17] 📢 📢  [BrushEdit](https://github.com/TencentARC/BrushEdit) are released, an efficient, white-box, free-form image editing tool powered by LLM-agents and an all-in-one inpainting model.
+- [2024/12/17] 📢 📢 [BrushNetX](https://huggingface.co/TencentARC/BrushEdit/tree/main/brushnetX) (Stronger BrushNet) models are released.
+
+## TODO
 
 - [x] Release trainig and inference code
 - [x] Release checkpoint (sdv1.5)
